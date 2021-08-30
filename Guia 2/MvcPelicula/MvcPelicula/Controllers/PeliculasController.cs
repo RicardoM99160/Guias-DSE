@@ -15,7 +15,7 @@ namespace MvcPelicula.Controllers
         private PeliculaDBContext db = new PeliculaDBContext();
 
         // GET: Peliculas
-        public ActionResult Index(string buscarString, string generoPelicula)
+        public ActionResult Index(string buscarString, string generoPelicula, string precioPelicula)
         {
 
             var GeneroLst = new List<string>();
@@ -34,6 +34,12 @@ namespace MvcPelicula.Controllers
             if (!String.IsNullOrEmpty(generoPelicula))
             {
                 peliculas = peliculas.Where(x => x.Genero == generoPelicula);
+            }
+
+            if(!String.IsNullOrEmpty(precioPelicula))
+            {
+                decimal precio = Decimal.Parse(precioPelicula);
+                peliculas = peliculas.Where(y => y.Precio == precio);
             }
 
             return View(peliculas);
