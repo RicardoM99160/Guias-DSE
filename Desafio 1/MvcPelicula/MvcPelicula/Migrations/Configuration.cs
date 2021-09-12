@@ -40,9 +40,8 @@
                 {
                     Titulo = "John Wick",
                     FechaLanzamiento = DateTime.Parse("2014-10-24"),
-                    Genero = "Accion",
-                    Precio = 6.99M,
-                    Calificacion = "D",
+                    Genero = "Accion", Precio = 6.99M, 
+                    Calificacion = "D", 
                     Productor = "David Leicht",
                     DirectorID = directores.Single(s => s.Nombre == "Chad Stahelski").DirectorID,
                     Director = directores.Single(s => s.Nombre == "Chad Stahelski")
