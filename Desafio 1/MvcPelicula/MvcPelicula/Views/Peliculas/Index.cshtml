@@ -36,6 +36,9 @@
         <th>
             @Html.DisplayNameFor(model => model.Calificacion)
         </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Productor)
+        </th>
         <th></th>
     </tr>
 
@@ -55,6 +58,9 @@
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.Calificacion)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Productor)
         </td>
         <td>
             @Html.ActionLink("Editar", "Edit", new { id = item.ID }) |

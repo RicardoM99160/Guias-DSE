@@ -11,7 +11,7 @@ namespace MvcPelicula.Models
     {
         public int ID { get; set; }
 
-        [StringLength(60, MinimumLength =3)]
+        [StringLength(60, MinimumLength = 3)]
         public string Titulo { get; set; }
 
         [Display(Name = "Fecha de Lanzamiento")]
@@ -31,6 +31,9 @@ namespace MvcPelicula.Models
         [RegularExpression(@"^[A-Z]+[a-zA-Z'\s]*$")]
         [StringLength(5)]
         public string Calificacion { get; set; }
+
+        [StringLength(60, MinimumLength = 3)]
+        public string Productor { get; set; }
     }
 
     public class PeliculaDBContext: DbContext
