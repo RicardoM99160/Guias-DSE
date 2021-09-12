@@ -1,6 +1,7 @@
 ﻿namespace MvcPelicula.Migrations
 {
     using System;
+    using System.Collections.Generic;
     using System.Data.Entity;
     using System.Data.Entity.Migrations;
     using System.Linq;
@@ -15,6 +16,25 @@
 
         protected override void Seed(MvcPelicula.Models.PeliculaDBContext context)
         {
+            var directores = new List<Director>
+            {
+                new Director
+                {
+                    Nombre = "Chad Stahelski"
+                },
+                new Director
+                {
+                    Nombre = "Michael Sucsy"
+                },
+                new Director
+                {
+                    Nombre = "Brad Silberling"
+                }
+            };
+
+            directores.ForEach(p => context.Directores.AddOrUpdate(d => d.Nombre, p));
+            context.SaveChanges();
+
             context.Peliculas.AddOrUpdate(i => i.Titulo,
                 new Pelicula
                 {
@@ -23,7 +43,9 @@
                     Genero = "Accion",
                     Precio = 6.99M,
                     Calificacion = "D",
-                    Productor = "David Leicht"
+                    Productor = "David Leicht",
+                    DirectorID = directores.Single(s => s.Nombre == "Chad Stahelski").DirectorID,
+                    Director = directores.Single(s => s.Nombre == "Chad Stahelski")
                 },
                 new Pelicula
                 {
@@ -32,7 +54,9 @@
                     Genero = "Accion",
                     Precio = 6.99M,
                     Calificacion = "D",
-                    Productor = "David Leicht"
+                    Productor = "David Leicht",
+                    DirectorID = directores.Single(s => s.Nombre == "Chad Stahelski").DirectorID,
+                    Director = directores.Single(s => s.Nombre == "Chad Stahelski")
                 },
                 new Pelicula
                 {
@@ -41,7 +65,9 @@
                     Genero = "Accion",
                     Precio = 6.99M,
                     Calificacion = "D",
-                    Productor = "Basil Iwanyk"
+                    Productor = "Basil Iwanyk",
+                    DirectorID = directores.Single(s => s.Nombre == "Chad Stahelski").DirectorID,
+                    Director = directores.Single(s => s.Nombre == "Chad Stahelski")
                 },
                 new Pelicula
                 {
@@ -50,7 +76,9 @@
                     Genero = "Romance",
                     Precio = 6.99M,
                     Calificacion = "A",
-                    Productor = "Jonathan Glickman"
+                    Productor = "Jonathan Glickman",
+                    DirectorID = directores.Single(s => s.Nombre == "Michael Sucsy").DirectorID,
+                    Director = directores.Single(s => s.Nombre == "Michael Sucsy")
                 }
             );
         }

@@ -34,10 +34,15 @@ namespace MvcPelicula.Models
 
         [StringLength(60, MinimumLength = 3)]
         public string Productor { get; set; }
+
+        public int? DirectorID { get; set; }
+
+        public virtual Director Director { get; set; }
     }
 
     public class PeliculaDBContext: DbContext
     {
         public DbSet<Pelicula> Peliculas { get; set; }
+        public DbSet<Director> Directores { get; set; }
     }
 }

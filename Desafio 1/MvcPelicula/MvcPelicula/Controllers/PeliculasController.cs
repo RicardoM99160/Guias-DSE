@@ -15,16 +15,26 @@ namespace MvcPelicula.Controllers
         private PeliculaDBContext db = new PeliculaDBContext();
 
         // GET: Peliculas
-        public ActionResult Index(string buscarString, string generoPelicula, string precioPelicula)
+        public ActionResult Index(string buscarString, string generoPelicula, string precioPelicula, string directorPelicula)
         {
+            var directores = from d in db.Directores select d;
+            var directoresLst = new List<Director>();
+            directoresLst.AddRange(directores.Distinct());
+
+            var peliculas = from p in db.Peliculas select p;
+
+            foreach (var pelicula in peliculas)
+            {
+                pelicula.Director = directoresLst.Single(s => s.DirectorID == pelicula.DirectorID);
+            }
 
             var GeneroLst = new List<string>();
             var GeneroQry = from d in db.Peliculas orderby d.Genero select d.Genero;
-
             GeneroLst.AddRange(GeneroQry.Distinct());
             ViewBag.generoPelicula = new SelectList(GeneroLst, "Acción");
 
-            var peliculas = from p in db.Peliculas select p;
+            var fromDatabaseEF = new SelectList(db.Directores.ToList(), "DirectorID", "Nombre");
+            ViewBag.directorPelicula = fromDatabaseEF;
 
             if (!String.IsNullOrEmpty(buscarString))
             {
@@ -42,6 +52,14 @@ namespace MvcPelicula.Controllers
                 peliculas = peliculas.Where(y => y.Precio == precio);
             }
 
+            if (!String.IsNullOrEmpty(directorPelicula))
+            {
+                int directorID = int.Parse(directorPelicula);
+                peliculas = peliculas.Where(x => x.DirectorID == directorID);
+            }
+
+
+
             return View(peliculas);
         }
 
@@ -53,6 +71,10 @@ namespace MvcPelicula.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             Pelicula pelicula = db.Peliculas.Find(id);
+
+            Director director = db.Directores.Find(pelicula.DirectorID);
+            ViewData["director"] = director.Nombre;
+
             if (pelicula == null)
             {
                 return HttpNotFound();
@@ -63,6 +85,10 @@ namespace MvcPelicula.Controllers
         // GET: Peliculas/Create
         public ActionResult Create()
         {
+            var directores = from d in db.Directores select d.Nombre;
+            var fromDatabaseEF = new SelectList(db.Directores.ToList(), "DirectorID", "Nombre");
+            ViewData["directores"] = fromDatabaseEF;
+
             return View();
         }
 
@@ -71,8 +97,17 @@ namespace MvcPelicula.Controllers
         // más información vea https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "ID,Titulo,FechaLanzamiento,Genero,Precio,Calificacion,Productor")] Pelicula pelicula)
+        public ActionResult Create([Bind(Include = "ID,Titulo,FechaLanzamiento,Genero,Precio,Calificacion,Productor")] Pelicula pelicula, int directorID)
         {
+            var directores = from d in db.Directores select d;
+            var directoresLst = new List<Director>();
+            directoresLst.AddRange(directores.Distinct());
+
+            Director directorSelec = directoresLst.Single(s => s.DirectorID == directorID);
+            pelicula.Director = directorSelec;
+            pelicula.DirectorID = directorSelec.DirectorID;
+
+
             if (ModelState.IsValid)
             {
                 db.Peliculas.Add(pelicula);
@@ -90,7 +125,17 @@ namespace MvcPelicula.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
+
             Pelicula pelicula = db.Peliculas.Find(id);
+
+            Director director = db.Directores.Find(pelicula.DirectorID);
+            pelicula.Director = director;
+
+            var directores = from d in db.Directores select d.Nombre;
+            var fromDatabaseEF = new SelectList(db.Directores.ToList(), "DirectorID", "Nombre", director.Nombre);
+            ViewData["directores"] = fromDatabaseEF;
+
+            
             if (pelicula == null)
             {
                 return HttpNotFound();
@@ -103,8 +148,17 @@ namespace MvcPelicula.Controllers
         // más información vea https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "ID,Titulo,FechaLanzamiento,Genero,Precio,Calificacion,Productor")] Pelicula pelicula)
+        public ActionResult Edit([Bind(Include = "ID,Titulo,FechaLanzamiento,Genero,Precio,Calificacion,Productor")] Pelicula pelicula, int directorID)
         {
+            var directores = from d in db.Directores select d;
+            var directoresLst = new List<Director>();
+            directoresLst.AddRange(directores.Distinct());
+
+            Director directorSelec = directoresLst.Single(s => s.DirectorID == directorID);
+            pelicula.Director = directorSelec;
+            pelicula.DirectorID = directorSelec.DirectorID;
+
+
             if (ModelState.IsValid)
             {
                 db.Entry(pelicula).State = EntityState.Modified;
@@ -122,6 +176,10 @@ namespace MvcPelicula.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             Pelicula pelicula = db.Peliculas.Find(id);
+
+            Director director = db.Directores.Find(pelicula.DirectorID);
+            ViewData["director"] = director.Nombre;
+
             if (pelicula == null)
             {
                 return HttpNotFound();

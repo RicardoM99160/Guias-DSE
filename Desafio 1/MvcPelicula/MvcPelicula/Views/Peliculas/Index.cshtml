@@ -15,6 +15,7 @@
             Género: @Html.DropDownList("generoPelicula", "Todos")
             Título: @Html.TextBox("buscarString") <br />
             Precio: @Html.TextBox("precioPelicula") <br />
+            Director: @Html.DropDownList("directorPelicula") <br />
             <input type="submit"  value="Filtrar"/>
         </p>
     }
@@ -39,6 +40,9 @@
         <th>
             @Html.DisplayNameFor(model => model.Productor)
         </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Director)
+        </th>
         <th></th>
     </tr>
 
@@ -61,6 +65,9 @@
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.Productor)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Director.Nombre)
         </td>
         <td>
             @Html.ActionLink("Editar", "Edit", new { id = item.ID }) |
